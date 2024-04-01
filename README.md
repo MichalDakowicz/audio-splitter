@@ -1,73 +1,70 @@
-# Audio Splitter
+# Audio Splitting Toolkit
 
-This Python script offers a flexible way to split audio files (MP3 format) into smaller segments based on timestamps provided either directly on the command line or within a text file.
+This toolkit provides a convenient way to split audio files, particularly those with timestamps derived from YouTube videos.
 
-## **Features**
-
--   Accepts timestamps in either HH:MM:SS or seconds format.
--   Leverages ffmpeg for audio processing.
--   Generates output files with a numbered prefix for easy organization.
--   Supports reading timestamps from a file for more convenient handling of larger lists.
-
-## **Prerequisites**
+## Prerequisites
 
 -   Python 3 ([https://www.python.org/downloads/](https://www.python.org/downloads/))
--   ffmpeg installed on your system ([https://ffmpeg.org/download.html](https://ffmpeg.org/download.html))
+-   ffmpeg ([https://ffmpeg.org/download.html](https://ffmpeg.org/download.html))
 
-## **Installation**
+## Workflow
 
-1. Download or copy the Python script (`audio_splitter.py`).
-2. Ensure you have ffmpeg installed. If needed, you can find installation tutorials online (The one i would recommend would be: [https://www.youtube.com/watch?v=r1AtmY-RMyQ](https://www.youtube.com/watch?v=r1AtmY-RMyQ)).
+1. **Obtain Timestamps:**
 
-## **Usage**
+    - **Direct Input:** If you already have timestamps in the correct format (HH:MM:SS or seconds), proceed to step 4.
+    - **YouTube Timestamps:**
+        1. Copy the timestamps from the YouTube video description.
+        2. Paste them into a plain text file (e.g., `youtube_timestamps.txt`).
 
-Run the script from your command line/terminal. There are two ways to provide timestamps:
+2. **Convert YouTube Timestamps (if needed):**
 
-**1. Directly on the Command Line:**
+    ```bash
+    python convert_yt_timestamps.py youtube_timestamps.txt converted_timestamps.txt <video_length>
+    ```
 
-```bash
-python audio_splitter.py <input_file.mp3> <output_prefix> --timestamps "<timestamp1>,<timestamp2>,..."
-```
+    - Replace `<video_length>` with the video's total duration in HH:MM:SS format (e.g., "01:25:40").
 
-**1.1 Example (using a timestamps):**
+3. **Split Your Audio File:**
+    ```bash
+    python audio_splitter.py <input_file.mp3> <output_prefix> --timestamps converted_timestamps.txt
+    ```
+    - Replace `<input_file.mp3>` with the path to your audio file.
+    - Replace `<output_prefix>` with your desired naming prefix for the output segments.
 
-```bash
-python audio_splitter.py interview.mp3 interview_part --timestamps "00:19:25,00:21:30,00:21:30,00:25:12,00:25:12,00:28:45"
-```
+## Detailed Explanation of Scripts
 
-**2. Using a Timestamps File:**
+-   **audio_splitter.py**
 
-a. Create a plain text file (e.g., `timestamps.txt`) with one timestamp pair per line:
+    -   Takes an MP3 file and splits it into smaller segments based on provided timestamps.
+    -   Supports timestamps in the following formats:
+        -   HH:MM:SS (e.g., "00:12:35")
+        -   Seconds (e.g., "12.5")
+    -   Accepts timestamps either as a comma-separated list on the command line or from a text file.
 
-      00:19:25,00:21:30
-      00:21:30,00:25:12
-      ... and so on
+-   **convert_yt_timestamps.py**
+    -   Transforms raw timestamps copied from YouTube video descriptions into the format compatible with `audio_splitter.py`.
+    -   Requires the total length of the corresponding video.
 
-b. Run the script, specifying your timestamps file:
+## Notes
 
-```bash
-python audio_splitter.py <input_file.mp3> <output_prefix> --timestamps timestamps.txt
-```
+-   Ensure you have permissions to write files in the directory where you execute the scripts.
+-   For extensive lists of timestamps, consider splitting your timestamps into multiple files and running the `audio_splitter.py` script multiple times for better management.
 
-**2.1 Example (using a timestamps file):**
+## Example
 
-```bash
-python audio_splitter.py interview.mp3 interview_part --timestamps timestamps.txt
-```
+Assuming you have a podcast named "interview.mp3" and copied YouTube timestamps into "yt_timestamps.txt":
 
-## **Explanation of Arguments**
+1. **Convert Timestamps:**
 
--   `<input_file.mp3>`: The path to the MP3 file you wish to split.
--   `<output_prefix>`: The desired prefix for the generated output files (e.g., 'interview_part').
--   `--timestamps`:
-    -   If providing timestamps directly, use a comma-separated list within quotes (e.g., `"00:01:23,00:05:00,12.5,20.0"`).
-    -   If using a file, provide the path to your timestamps file (e.g., `timestamps.txt`).
+    ```bash
+    python convert_yt_timestamps.py yt_timestamps.txt converted_timestamps.txt 01:55:20
+    ```
 
-## **Output**
+    (Assuming the podcast is 1 hour, 55 minutes, and 20 seconds long)
 
-The script will create multiple MP3 files in the same directory, named with your specified output prefix and numbered sequentially (e.g., interview_part_1.mp3, interview_part_2.mp3).
+2. **Split the Audio:**
+    ```bash
+    python audio_splitter.py interview.mp3 interview_segment --timestamps converted_timestamps.txt
+    ```
 
-## **Notes**
-
--   Ensure you have the necessary permissions to write files in the output directory.
--   For very large lists of timestamps, it might be more efficient to split your timestamps into multiple files and run the script multiple times.
+Let me know if you have any other scenarios or features you'd like to showcase!
