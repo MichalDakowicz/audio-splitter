@@ -31,6 +31,14 @@ This toolkit provides a convenient way to split audio files, particularly those 
     - Replace `<input_file.mp3>` with the path to your audio file.
     - Replace `<output_prefix>` with your desired naming prefix for the output segments.
 
+4. **Rename Your Files (if needed):**
+    - Move the generated files to the `bulk-renamer`
+    - Insert the new names into the `rename.txt`
+    ```bash
+    python bulk-renamer/main.py
+    ```
+    - Then input the prefix you typed in `<output_prefix>` step before
+
 ## Detailed Explanation of Scripts
 
 -   **audio_splitter.py**
